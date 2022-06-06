@@ -12,13 +12,15 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
-const createProductItemElement = ({ sku, name, image }) => {
+const createProductItemElement = ({ sku, name, image, price }) => {
   const section = document.createElement('section');
   section.className = 'item';
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
+// Adicionei um span onde vai o preço do item, embaixo da imagem;
+  section.appendChild(createCustomElement('span', 'item_price', `R$ ${price}`));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   return section;
@@ -38,4 +40,29 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-window.onload = () => { };
+// MINHAS FUNÇÕES;
+
+// Coloca minhas seções na página;
+const appendChild = (parent, child) => {
+  const element = document.querySelector(parent);
+  element.appendChild(child);
+};
+
+// Organiza os itens trazidos do json da API em sku, name, image, price;
+const items = async () => {
+  const response = await fetchProducts('computador');
+  const result = response.map((item) => ({ sku: item.id,
+    name: item.title,
+    image: item.thumbnail,
+    price: item.price,
+   }));
+
+// createProductItemElement cria minhas seções e o appendChild coloca eles dentro da minha página;
+  result.forEach((item) => {
+    appendChild('.items', createProductItemElement(item));
+  });
+};
+
+window.onload = () => {
+  items();
+};
