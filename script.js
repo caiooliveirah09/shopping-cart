@@ -5,7 +5,7 @@ const appendChild = (parent, child) => {
 };
 
 const cartItemClickListener = (event) => {
-  // coloque seu código aqui
+  event.target.parentElement.removeChild(event.target);
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -26,6 +26,7 @@ const addCart = async (event) => {
     salePrice: response.price,
   };
 // coloca no carrinho;
+console.log(object);
   const cartItem = createCartItemElement(object);
   appendChild('.cart__items', cartItem);
 };
@@ -92,6 +93,17 @@ const items = async () => {
   });
 };
 
+const emptyCart = () => {
+  const cart = document.getElementById('cartList');
+  cart.innerHTML = '';
+};
+
+const addEvent = () => {
+  const emptyButton = document.getElementsByClassName('empty-cart');
+  emptyButton[0].addEventListener('click', emptyCart);
+};
+
 window.onload = () => {
   items();
+  addEvent();
 };
