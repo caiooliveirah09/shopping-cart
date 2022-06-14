@@ -1,18 +1,32 @@
+// calcula o preço final e coloca no html usando os ids;
+const finalPrice = async () => {
+  const cart = await document.getElementsByClassName('cart__item');
+  let acc = 0;
+  for (let i = 0; i < cart.length; i += 1) {
+    acc += parseFloat(cart[i].id);
+  }
+  const price = await document.getElementsByClassName('total-price')[0];
+  price.innerText = acc;
+};
+
 // coloca minhas seções na página;
 const appendChild = (parent, child) => {
   const element = document.querySelector(parent);
   element.appendChild(child);
 };
-
+// remove um item do carrinho quando clica nele;
 const cartItemClickListener = (event) => {
   event.target.parentElement.removeChild(event.target);
+  finalPrice();
 };
 
+// cria um item pro carrinho;
 const createCartItemElement = ({ sku, name, salePrice }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  li.id = salePrice;
   return li;
 };
 
@@ -26,9 +40,9 @@ const addCart = async (event) => {
     salePrice: response.price,
   };
 // coloca no carrinho;
-console.log(object);
   const cartItem = createCartItemElement(object);
   appendChild('.cart__items', cartItem);
+  finalPrice();
 };
 
 const createProductImageElement = (imageSource) => {
@@ -96,6 +110,8 @@ const items = async () => {
 const emptyCart = () => {
   const cart = document.getElementById('cartList');
   cart.innerHTML = '';
+  const price = document.getElementsByClassName('total-price');
+  price[0].innerText = '';
 };
 
 const addEvent = () => {
